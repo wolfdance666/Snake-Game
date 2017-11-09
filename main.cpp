@@ -1,55 +1,172 @@
 #include <iostream>
 #include <ncurses.h>
+#include <thread>
+#include <chrono>
+#include <vector>
 
 using namespace std;
+
+
+class Point
+{
+public:
+  Point(): x(0), y(0) {}
+  Point(int x, int y):x(x), y(y) {}
+  Point operator+(Point const& other)
+  {
+    return Point(x+other.x, y+other.y);
+  }
+  Point operator-(Point const& other)
+  {
+    return Point(x-other.x, y-other.y);
+  }
+  bool operator==(Point const& other) const
+  {
+    return x == other.x && y == other.y;
+  }
+  bool operator!=(Point const& other) const
+  {
+    return !(*this == other);
+  }
+  int x;
+  int y;
+};
+
+class Window
+{
+public:
+    Window(Point const& size, Point const& p)
+    {
+      m_window = newwin(size.y, size.x, p.y, p.x);
+    }
+    ~Window()
+    {
+      delwin(m_window);
+    }
+    void refresh()
+    {
+      wrefresh(m_window);
+    }
+    void clear()
+    {
+      wclear(m_window);
+    }
+    void printBorder()
+    {
+      wborder(m_window, '|', '|', '-', '-', '+', '+', '+', '+');
+    }
+    void printString(Point const& p, string const& str)
+    {
+      mvwprintw(m_window, p.y, p.x, str.c_str());
+    }
+private:
+  WINDOW* m_window;
+};
+
+class Snake
+{
+public:
+  Snake(vector<Point> const& snake)
+  {
+    m_snake = snake;
+  }
+  ~Snake(){}
+  void print(Window& w)
+  {
+    const string s = "o";
+    int i=0;
+    for(auto const& p : m_snake)
+    {
+      w.printString(p, to_string(i++));
+    }
+  }
+  void move(Point const& newPos)
+  {
+    for(size_t i=m_snake.size()-1; i>0; --i)
+    {
+      m_snake[i]=m_snake[i-1];
+    }
+    m_snake[0]=newPos;
+  }
+  Point getDirection()
+  {
+    return m_direction;
+  }
+  void updateDirection(Point p)
+  {
+    if(p.x != 0 && m_direction.x == 0)
+    {
+      m_direction.y = 0;
+      m_direction.x = p.x;
+    }
+    else if(p.y != 0 && m_direction.y == 0)
+    {
+      m_direction.x = 0;
+      m_direction.y = p.y;
+    }
+  }
+private:
+  vector<Point> m_snake;
+  Point m_direction = Point(0, 0);
+};
+
+
 
 int main()
 {
   initscr();      /* Start curses mode      */
   cbreak();
   noecho();
+  nodelay(stdscr, true);
   refresh();
   curs_set(0);
+  keypad(stdscr, true);
+
+  Point pos(25, 12);
+  Snake s = Snake({pos, pos+Point(0,1), pos+Point(1,1), pos+Point(1,2)});
 
   int ch;
-  int width=50, height=25;
-  auto local_win = newwin(height, width, 2, 2);
-  keypad(stdscr, true);
-  wborder(local_win, '|', '|', '-', '-', '+', '+', '+', '+');
+  Point size = Point(50, 25);
+  Window w(size, Point(2, 2));
+  w.printBorder();
 
-  int x=25, y=12;
-  mvwprintw(local_win, y, x, "o");
-  wrefresh(local_win);
+  s.print(w);
+  w.refresh();
 
   while((ch = getch()) != KEY_F(2))
   {
-    wclear(local_win);
-    clear();
-    wborder(local_win, '|', '|', '-', '-', '+', '+', '+', '+');
+    w.clear();
+    w.printBorder();
     switch(ch)
     { case KEY_LEFT:
-        mvprintw(1, 1, "LEFT");
-        if (x>1) x--;
+        s.updateDirection(Point(-1, 0));
         break;
       case KEY_RIGHT:
-        mvprintw(1, 1, "RIGHT");
-        if (x<width-2) x++;
+        s.updateDirection(Point(1, 0));
         break;
       case KEY_UP:
-        mvprintw(1, 1,  "UP");
-        if (y>1) y--;
+        s.updateDirection(Point(0, -1));
         break;
       case KEY_DOWN:
-        mvprintw(1, 1,  "DOWN");
-        if (y<height-2) y++;
+        s.updateDirection(Point(0, 1));
+        break;
+      case ERR:
         break;
     }
-    mvwprintw(local_win, y, x, "o");
-    refresh();
-    wrefresh(local_win);
+    if (s.getDirection() != Point(0,0))
+    {
+      auto newPos = pos + s.getDirection();
+      if (newPos.x>0 && newPos.x<size.x-1 && newPos.y>0 && newPos.y<size.y-1)
+      {
+        pos=newPos;
+        s.move(pos);
+      }
+    }
+    s.print(w);
+    w.refresh();
+    this_thread::sleep_for(chrono::milliseconds(50));
   }
 
-  delwin(local_win);
   endwin();     /* End curses mode      */
   return 0;
 }
