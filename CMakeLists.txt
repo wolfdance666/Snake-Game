@@ -7,7 +7,16 @@ find_package(Curses REQUIRED)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(snake main.cpp)
+add_executable(
+  snake
+  src/main.cpp
+  src/Point.cpp
+  src/Point.h
+  src/Snake.cpp
+  src/Snake.h
+  src/Window.cpp
+  src/Window.h
+  )
 
 target_include_directories(snake SYSTEM PRIVATE ${CURSES_INCLUDE_DIRS})
 
