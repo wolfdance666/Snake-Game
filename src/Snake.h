@@ -9,12 +9,13 @@ class Window;
 class Snake
 {
 public:
-    Snake(std::vector<Point> const& snake);
+    Snake(Point const& head, std::vector<Point> const& tail={});
     ~Snake();
     void print(Window& w);
     void move(Point const& newPos);
     Point getDirection() const;
-    void updateDirection(Point p);
+    void updateDirection(Point const& p);
+    void grow();
 
 private:
     std::vector<Point> m_snake;

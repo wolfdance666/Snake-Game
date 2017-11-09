@@ -19,7 +19,7 @@ int main()
     keypad(stdscr, true);
 
     Point pos(25, 12);
-    Snake s = Snake({pos, pos + Point(0, 1), pos + Point(1, 1), pos + Point(1, 2)});
+    Snake s = Snake(pos, {pos + Point(0, 1), pos + Point(1, 1), pos + Point(1, 2)});
 
     int ch;
     Point size = Point(50, 25);
@@ -46,6 +46,9 @@ int main()
             break;
         case KEY_DOWN:
             s.updateDirection(Point(0, 1));
+            break;
+        case 'g':
+            s.grow();
             break;
         case ERR:
             break;
