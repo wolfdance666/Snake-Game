@@ -1,9 +1,12 @@
 #pragma once
 
 #include <string>
-#include <ncurses.h>
 
 #include "Point.h"
+
+// forward declare WINDOW from ncurses.h
+struct _win_st;
+typedef struct _win_st WINDOW;
 
 class Window
 {

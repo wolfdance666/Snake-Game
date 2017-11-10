@@ -1,4 +1,5 @@
 #include "Window.h"
+#include <ncurses.h>
 
 Window::Window(Point const& size, Point const& p)
 {

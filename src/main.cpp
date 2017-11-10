@@ -8,9 +8,10 @@
 #include "Snake.h"
 
 using namespace std;
+
 int main()
 {
-    initscr(); /* Start curses mode      */
+    initscr(); /* Start curses mode */
     cbreak();
     noecho();
     nodelay(stdscr, true);
@@ -67,6 +68,6 @@ int main()
         this_thread::sleep_for(chrono::milliseconds(50));
     }
 
-    endwin(); /* End curses mode      */
+    endwin(); /* End curses mode */
     return 0;
 }
