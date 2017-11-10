@@ -17,6 +17,7 @@ public:
     void clear();
     void printBorder();
     void printString(Point const& p, std::string const& str);
+    void resize(Point const& size);
 
 private:
     WINDOW* m_window;

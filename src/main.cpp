@@ -4,8 +4,8 @@
 #include <thread>
 
 #include "Point.h"
-#include "Window.h"
 #include "Snake.h"
+#include "Window.h"
 
 using namespace std;
 
@@ -23,7 +23,7 @@ int main()
     Snake s = Snake(pos, {pos + Point(0, 1), pos + Point(1, 1), pos + Point(1, 2)});
 
     int ch;
-    Point size = Point(50, 25);
+    const Point size = Point(50, 25);
     Window w(size, Point(2, 2));
     w.printBorder();
 
@@ -50,6 +50,9 @@ int main()
             break;
         case 'g':
             s.grow();
+            break;
+        case KEY_RESIZE:
+            w.resize(size);
             break;
         case ERR:
             break;

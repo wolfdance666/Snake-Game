@@ -30,3 +30,8 @@ void Window::printString(Point const& p, std::string const& str)
 {
     mvwprintw(m_window, p.y, p.x, str.c_str());
 }
+
+void Window::resize(Point const& size)
+{
+    wresize(m_window, size.y, size.x);
+}
