@@ -12,12 +12,12 @@ Point::Point(int x, int y)
 {
 }
 
-Point Point::operator+(Point const& other)
+Point Point::operator+(Point const& other) const
 {
     return Point(x + other.x, y + other.y);
 }
 
-Point Point::operator-(Point const& other)
+Point Point::operator-(Point const& other) const
 {
     return Point(x - other.x, y - other.y);
 }

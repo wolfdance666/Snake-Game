@@ -17,6 +17,7 @@ public:
     void clear();
     void printBorder();
     void printString(Point const& p, std::string const& str);
+    void printChar(Point const& p, char c);
     void resize(Point const& size);
 
 private:

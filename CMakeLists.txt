@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(
   snake
+  src/Playground.cpp
+  src/Playground.h
   src/main.cpp
   src/Point.cpp
   src/Point.h

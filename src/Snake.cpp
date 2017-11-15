@@ -1,56 +1,121 @@
 #include "Snake.h"
+#include "Playground.h"
 #include "Window.h"
 
 using namespace std;
 
-Snake::Snake(Point const& head, vector<Point> const& tail)
+Snake::Snake(Playground& pg, Point const& head)
+    : m_pg(pg)
+    , m_direction(NONE)
+    , m_isDead(false)
 {
-    m_snake.push_back(head);
-    m_snake.insert(m_snake.end(), tail.begin(), tail.end());
+    m_body.push_front(head);
+    pg.setPointType(head, Playground::Snake);
 }
 
 Snake::~Snake()
 {
 }
 
-void Snake::print(Window& w)
+Point Snake::head() const
 {
-    int i = 0;
-    for (auto const& p : m_snake)
+    return m_body.front();
+}
+
+Point Snake::tail() const
+{
+    return m_body.back();
+}
+
+bool Snake::isDead() const
+{
+    return m_isDead;
+}
+
+void Snake::move()
+{
+    if (m_isDead || m_direction == NONE)
+        return;
+
+    auto newPos = head() + positionDelta();
+    if (newPos.x >= 0 && newPos.x < m_pg.getWidth() && newPos.y >= 0 && newPos.y < m_pg.getHeight()
+        && m_pg.getPointType(newPos) != Playground::Snake)
     {
-        w.printString(p, i++ == 0 ? "0" : "#");
+        m_pg.setPointType(tail(), Playground::Empty);
+        m_body.pop_back();
+        m_body.push_front(newPos);
+        m_pg.setPointType(head(), Playground::Snake);
+    }
+    else
+    {
+        m_isDead = true;
     }
 }
 
-void Snake::move(Point const& newPos)
-{
-    for (size_t i = m_snake.size() - 1; i > 0; --i)
-    {
-        m_snake[i] = m_snake[i - 1];
-    }
-    m_snake[0] = newPos;
-}
-
-Point Snake::getDirection() const
+Snake::Direction Snake::getDirection() const
 {
     return m_direction;
 }
 
-void Snake::updateDirection(Point const& p)
+void Snake::setDirection(Direction d)
 {
-    if (p.x != 0 && m_direction.x == 0)
+    if (m_isDead)
+        return;
+
+    if (d != opposite(m_direction))
     {
-        m_direction.y = 0;
-        m_direction.x = p.x;
-    }
-    else if (p.y != 0 && m_direction.y == 0)
-    {
-        m_direction.x = 0;
-        m_direction.y = p.y;
+        m_direction = d;
     }
 }
 
 void Snake::grow()
 {
-    m_snake.push_back(m_snake.back());
+    m_body.push_back(m_body.back());
+}
+
+Point Snake::positionDelta() const
+{
+    switch (m_direction)
+    {
+    case NONE:
+        return Point(0, 0);
+    case LEFT:
+        return Point(-1, 0);
+    case RIGHT:
+        return Point(1, 0);
+    case UP:
+        return Point(0, -1);
+    case DOWN:
+        return Point(0, 1);
+    default:
+        return Point(0, 0);
+    }
+}
+
+Snake::Direction Snake::opposite(Direction d)
+{
+    switch (d)
+    {
+    case NONE:
+        return NONE;
+    case LEFT:
+        return RIGHT;
+    case RIGHT:
+        return LEFT;
+    case UP:
+        return DOWN;
+    case DOWN:
+        return UP;
+    default:
+        return NONE;
+    }
+}
+
+void Snake::reset(Point const& head)
+{
+    m_direction = NONE;
+    m_isDead = false;
+    m_body.clear();
+    m_body.push_front(head);
+    m_pg.setPointType(head, Playground::Snake);
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 
+#include "Playground.h"
 #include "Point.h"
 #include "Snake.h"
 #include "Window.h"
@@ -19,15 +20,15 @@ int main()
     curs_set(0);
     keypad(stdscr, true);
 
-    Point pos(25, 12);
-    Snake s = Snake(pos, {pos + Point(0, 1), pos + Point(1, 1), pos + Point(1, 2)});
+    Playground pg(48, 23);
+    Snake s = Snake(pg, Point(25, 12));
 
     int ch;
     const Point size = Point(50, 25);
     Window w(size, Point(2, 2));
     w.printBorder();
 
-    s.print(w);
+    pg.print(w, Point(1, 1));
     w.refresh();
 
     while ((ch = getch()) != KEY_F(2))
@@ -37,19 +38,26 @@ int main()
         switch (ch)
         {
         case KEY_LEFT:
-            s.updateDirection(Point(-1, 0));
+            s.setDirection(Snake::LEFT);
             break;
         case KEY_RIGHT:
-            s.updateDirection(Point(1, 0));
+            s.setDirection(Snake::RIGHT);
             break;
         case KEY_UP:
-            s.updateDirection(Point(0, -1));
+            s.setDirection(Snake::UP);
             break;
         case KEY_DOWN:
-            s.updateDirection(Point(0, 1));
+            s.setDirection(Snake::DOWN);
             break;
         case 'g':
             s.grow();
+            break;
+        case 'n':
+            if (s.isDead())
+            {
+                pg.reset();
+                s.reset(Point(25, 12));
+            }
             break;
         case KEY_RESIZE:
             w.resize(size);
@@ -57,18 +65,16 @@ int main()
         case ERR:
             break;
         }
-        if (s.getDirection() != Point(0, 0))
+
+        s.move();
+        pg.print(w, Point(1, 1));
+
+        if (s.isDead())
         {
-            auto newPos = pos + s.getDirection();
-            if (newPos.x > 0 && newPos.x < size.x - 1 && newPos.y > 0 && newPos.y < size.y - 1)
-            {
-                pos = newPos;
-                s.move(pos);
-            }
+            w.printString(Point(20, 12), "GAME OVER!!!");
         }
-        s.print(w);
         w.refresh();
-        this_thread::sleep_for(chrono::milliseconds(50));
+        this_thread::sleep_for(chrono::milliseconds(100));
     }
 
     endwin(); /* End curses mode */

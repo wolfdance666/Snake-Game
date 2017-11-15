@@ -1,23 +1,42 @@
 #pragma once
 
-#include <vector>
+#include <deque>
 
 #include "Point.h"
 
+class Playground;
 class Window;
 
 class Snake
 {
 public:
-    Snake(Point const& head, std::vector<Point> const& tail={});
+    enum Direction
+    {
+        NONE,
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    };
+
+    Snake(Playground& pg, Point const& head);
     ~Snake();
-    void print(Window& w);
-    void move(Point const& newPos);
-    Point getDirection() const;
-    void updateDirection(Point const& p);
+
+    void move();
+    Point head() const;
+    Point tail() const;
+    Direction getDirection() const;
+    void setDirection(Direction d);
     void grow();
+    bool isDead() const;
+    void reset(Point const& head);
 
 private:
-    std::vector<Point> m_snake;
-    Point m_direction;
+    Playground& m_pg;
+    std::deque<Point> m_body;
+    Direction m_direction;
+    bool m_isDead;
+
+    Point positionDelta() const;
+    static Direction opposite(Direction d);
 };
