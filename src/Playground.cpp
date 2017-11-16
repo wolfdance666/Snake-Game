@@ -5,15 +5,7 @@ Playground::Playground(size_t width, size_t height)
     : m_width(width)
     , m_height(height)
 {
-    m_playground.resize(height);
-    for (size_t y = 0; y < height; y++)
-    {
-        m_playground[y].resize(width);
-        for (size_t x = 0; x < width; x++)
-        {
-            m_playground[y][x] = Empty;
-        }
-    }
+    reset();
 }
 
 void Playground::print(Window& w, Point const& position)
@@ -33,7 +25,11 @@ void Playground::setPointType(Point const& position, PointType pt)
     if (position.y >= 0 && static_cast<size_t>(position.y) < m_height && position.x >= 0
         && static_cast<size_t>(position.x) < m_width)
     {
+        auto oldType
+            = m_playground[static_cast<size_t>(position.y)][static_cast<size_t>(position.x)];
         m_playground[static_cast<size_t>(position.y)][static_cast<size_t>(position.x)] = pt;
+        m_histogram[oldType]--;
+        m_histogram[pt]++;
     }
 }
 
@@ -61,11 +57,32 @@ int Playground::getHeight() const
 
 void Playground::reset()
 {
+    m_playground.resize(m_height);
     for (size_t y = 0; y < m_height; y++)
     {
+        m_playground[y].resize(m_width);
         for (size_t x = 0; x < m_width; x++)
         {
             m_playground[y][x] = Empty;
         }
     }
+
+    m_histogram[Empty] = static_cast<int>(m_width * m_height);
+}
+
+int Playground::count(PointType pt) const
+{
+    //    int countPointType =0;
+    //    for (size_t y = 0; y < m_height; y++)
+    //    {
+    //        for (size_t x = 0; x < m_width; x++)
+    //        {
+    //            if (m_playground[y][x] == pt)
+    //            {
+    //                countPointType++;
+    //            }
+    //        }
+    //    }
+    //    return countPointType;
+    return m_histogram[pt];
 }

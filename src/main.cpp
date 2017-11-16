@@ -3,6 +3,7 @@
 #include <iostream>
 #include <thread>
 
+#include "FoodGenerator.h"
 #include "Playground.h"
 #include "Point.h"
 #include "Snake.h"
@@ -20,60 +21,73 @@ int main()
     curs_set(0);
     keypad(stdscr, true);
 
-    Playground pg(48, 23);
-    Snake s = Snake(pg, Point(25, 12));
+    srand(static_cast<unsigned int>(time(nullptr)));
+
+    Playground playground(48, 23);
+    Snake snake(playground, Point(25, 12));
+    FoodGenerator foodgenerator(playground);
+
+    Window scoreWin(Point(50, 5), Point(1, 1));
+    scoreWin.printBorder();
+    scoreWin.printString(Point(5, 2), "SCORE: 0");
+    scoreWin.refresh();
+
+    const Point size = Point(50, 25);
+    Window gameWin(size, Point(1, 6));
+    gameWin.printBorder();
+
+    playground.print(gameWin, Point(1, 1));
+    gameWin.refresh();
 
     int ch;
-    const Point size = Point(50, 25);
-    Window w(size, Point(2, 2));
-    w.printBorder();
-
-    pg.print(w, Point(1, 1));
-    w.refresh();
-
-    while ((ch = getch()) != KEY_F(2))
+    while ((ch = getch()) != 'q')
     {
-        w.clear();
-        w.printBorder();
+        gameWin.clear();
+        gameWin.printBorder();
         switch (ch)
         {
         case KEY_LEFT:
-            s.setDirection(Snake::LEFT);
+            snake.setDirection(Snake::LEFT);
             break;
         case KEY_RIGHT:
-            s.setDirection(Snake::RIGHT);
+            snake.setDirection(Snake::RIGHT);
             break;
         case KEY_UP:
-            s.setDirection(Snake::UP);
+            snake.setDirection(Snake::UP);
             break;
         case KEY_DOWN:
-            s.setDirection(Snake::DOWN);
+            snake.setDirection(Snake::DOWN);
             break;
         case 'g':
-            s.grow();
+            snake.grow();
             break;
         case 'n':
-            if (s.isDead())
+            if (snake.isDead())
             {
-                pg.reset();
-                s.reset(Point(25, 12));
+                playground.reset();
+                snake.reset(Point(25, 12));
             }
             break;
         case KEY_RESIZE:
-            w.resize(size);
+            gameWin.resize(size);
             break;
         case ERR:
             break;
         }
 
-        s.move();
-        pg.print(w, Point(1, 1));
+        foodgenerator.update();
+        snake.move();
+        playground.print(gameWin, Point(1, 1));
 
-        if (s.isDead())
+        if (snake.isDead())
         {
-            w.printString(Point(20, 12), "GAME OVER!!!");
+            gameWin.printString(Point(20, 12), "GAME OVER!!!");
         }
-        w.refresh();
+        gameWin.refresh();
+
+        scoreWin.printString(Point(5, 2), "SCORE: " + std::to_string(snake.getSize() - 1));
+        scoreWin.refresh();
+
         this_thread::sleep_for(chrono::milliseconds(100));
     }
 

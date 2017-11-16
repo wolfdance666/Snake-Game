@@ -1,6 +1,5 @@
 #include "Snake.h"
 #include "Playground.h"
-#include "Window.h"
 
 using namespace std;
 
@@ -41,6 +40,10 @@ void Snake::move()
     if (newPos.x >= 0 && newPos.x < m_pg.getWidth() && newPos.y >= 0 && newPos.y < m_pg.getHeight()
         && m_pg.getPointType(newPos) != Playground::Snake)
     {
+        if (m_pg.getPointType(newPos) == Playground::Food)
+        {
+            grow();
+        }
         m_pg.setPointType(tail(), Playground::Empty);
         m_body.pop_back();
         m_body.push_front(newPos);
@@ -50,6 +53,7 @@ void Snake::move()
     {
         m_isDead = true;
     }
+
 }
 
 Snake::Direction Snake::getDirection() const
@@ -71,6 +75,11 @@ void Snake::setDirection(Direction d)
 void Snake::grow()
 {
     m_body.push_back(m_body.back());
+}
+
+int Snake::getSize() const
+{
+    return static_cast<int>(m_body.size());
 }
 
 Point Snake::positionDelta() const

@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD 11)
 
 add_executable(
   snake
+  src/FoodGenerator.cpp  
+  src/FoodGenerator.h
   src/Playground.cpp
   src/Playground.h
   src/main.cpp

@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "Point.h"
 
@@ -13,7 +14,8 @@ public:
     enum PointType : char
     {
         Empty = '.',
-        Snake = '#'
+        Snake = '#',
+        Food = 'M',
     };
     Playground(size_t width, size_t height);
     //~Playground();
@@ -23,9 +25,11 @@ public:
     int getWidth() const;
     int getHeight() const;
     void reset();
+    int count(PointType pt) const;
 
 private:
-    std::vector<std::vector<char>> m_playground;
+    std::vector<std::vector<PointType>> m_playground;
     size_t m_width;
     size_t m_height;
+    mutable std::map<PointType, int> m_histogram;
 };

@@ -5,7 +5,6 @@
 #include "Point.h"
 
 class Playground;
-class Window;
 
 class Snake
 {
@@ -28,6 +27,7 @@ public:
     Direction getDirection() const;
     void setDirection(Direction d);
     void grow();
+    int getSize() const;
     bool isDead() const;
     void reset(Point const& head);
 
