@@ -13,6 +13,8 @@ add_executable(
   src/FoodGenerator.h
   src/Playground.cpp
   src/Playground.h
+  src/PlaygroundView.cpp  
+  src/PlaygroundView.h
   src/main.cpp
   src/Point.cpp
   src/Point.h

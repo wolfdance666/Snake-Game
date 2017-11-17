@@ -1,23 +1,10 @@
 #include "Playground.h"
-#include "Window.h"
 
 Playground::Playground(size_t width, size_t height)
     : m_width(width)
     , m_height(height)
 {
     reset();
-}
-
-void Playground::print(Window& w, Point const& position)
-{
-    for (size_t y = 0; y < m_height; y++)
-    {
-        for (size_t x = 0; x < m_width; x++)
-        {
-            w.printChar(position + Point(static_cast<int>(x), static_cast<int>(y)),
-                        m_playground[y][x]);
-        }
-    }
 }
 
 void Playground::setPointType(Point const& position, PointType pt)

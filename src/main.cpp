@@ -5,6 +5,7 @@
 
 #include "FoodGenerator.h"
 #include "Playground.h"
+#include "PlaygroundView.h"
 #include "Point.h"
 #include "Snake.h"
 #include "Window.h"
@@ -36,7 +37,8 @@ int main()
     Window gameWin(size, Point(1, 6));
     gameWin.printBorder();
 
-    playground.print(gameWin, Point(1, 1));
+    PlaygroundView playgroundView(playground, gameWin, Point(1, 1));
+    playgroundView.render();
     gameWin.refresh();
 
     int ch;
@@ -77,7 +79,7 @@ int main()
 
         foodgenerator.update();
         snake.move();
-        playground.print(gameWin, Point(1, 1));
+        playgroundView.render();
 
         if (snake.isDead())
         {
