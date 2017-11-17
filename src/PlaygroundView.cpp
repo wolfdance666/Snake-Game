@@ -20,7 +20,7 @@ void PlaygroundView::render()
             switch (pointType)
             {
             case Playground::Snake:
-                displayedChar = '#';
+                displayedChar = 'O';
                 break;
             case Playground::Food:
                 displayedChar = 'M';

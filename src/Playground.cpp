@@ -54,6 +54,7 @@ void Playground::reset()
         }
     }
 
+    m_histogram.clear();
     m_histogram[Empty] = static_cast<int>(m_width * m_height);
 }
 
