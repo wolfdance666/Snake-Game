@@ -29,21 +29,17 @@ int main()
     FoodGenerator foodgenerator(playground);
 
     Window scoreWin(Point(50, 5), Point(1, 1));
-    scoreWin.printBorder();
-    scoreWin.printString(Point(5, 2), "SCORE: 0");
-    scoreWin.refresh();
 
     const Point size = Point(50, 25);
     Window gameWin(size, Point(1, 6));
-    gameWin.printBorder();
 
     PlaygroundView playgroundView(playground, gameWin, Point(1, 1));
-    playgroundView.render();
-    gameWin.refresh();
 
-    int ch;
-    while ((ch = getch()) != 'q')
+    bool gameIsRunning = true;
+    bool gameIsPaused = false;
+    while (gameIsRunning)
     {
+        int ch = getch();
         gameWin.clear();
         gameWin.printBorder();
         switch (ch)
@@ -63,6 +59,12 @@ int main()
         case 'g':
             snake.grow();
             break;
+        case 'q':
+            gameIsRunning = false;
+            break;
+        case 'p':
+            gameIsPaused = !gameIsPaused;
+            break;
         case 'n':
             if (snake.isDead())
             {
@@ -76,10 +78,16 @@ int main()
         case ERR:
             break;
         }
-
-        foodgenerator.update();
-        snake.move();
-        playgroundView.render();
+        if (!gameIsPaused)
+        {
+            foodgenerator.update();
+            snake.move();
+            playgroundView.render();
+        }
+        else
+        {
+            gameWin.printString(Point(5, 12), "THE GAME IS PAUSED. PRESS P TO CONTINUE");
+        }
 
         if (snake.isDead())
         {
@@ -87,6 +95,8 @@ int main()
         }
         gameWin.refresh();
 
+        scoreWin.clear();
+        scoreWin.printBorder();
         scoreWin.printString(Point(5, 2), "SCORE: " + std::to_string(snake.getSize() - 1));
         scoreWin.refresh();
 
