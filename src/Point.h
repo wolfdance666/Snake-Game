@@ -7,6 +7,8 @@ public:
     Point(int x, int y);
     Point operator+(Point const& other) const;
     Point operator-(Point const& other) const;
+    Point operator*(int s) const;
+    Point operator/(int s) const;
     bool operator==(Point const& other) const;
     bool operator!=(Point const& other) const;
     int x;

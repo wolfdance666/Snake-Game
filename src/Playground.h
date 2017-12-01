@@ -15,7 +15,7 @@ public:
         Snake,
         Food
     };
-    Playground(size_t width, size_t height);
+    Playground(int width, int height);
     void setPointType(Point const& position, PointType pt);
     PointType getPointType(Point const& position) const;
     int getWidth() const;

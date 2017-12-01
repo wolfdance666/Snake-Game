@@ -22,6 +22,16 @@ Point Point::operator-(Point const& other) const
     return Point(x - other.x, y - other.y);
 }
 
+Point Point::operator*(int s) const
+{
+    return Point(x * s, y * s);
+}
+
+Point Point::operator/(int s) const
+{
+    return Point(x / s, y / s);
+}
+
 bool Point::operator==(Point const& other) const
 {
     return x == other.x && y == other.y;

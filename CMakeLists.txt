@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.1.3)
 project(sneick666)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+
 set(CURSES_NEED_NCURSES TRUE)
 find_package(Curses REQUIRED)
 find_package(SFML REQUIRED COMPONENTS System Window Graphics)
@@ -13,6 +14,8 @@ add_executable(
   snake
   src/FoodGenerator.cpp  
   src/FoodGenerator.h
+  src/Game.cpp
+  src/Game.h
   src/PlaygroundGraphicView.cpp
   src/PlaygroundGraphicView.h
   src/Playground.cpp

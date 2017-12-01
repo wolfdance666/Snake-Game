@@ -1,8 +1,8 @@
 #include "Playground.h"
 
-Playground::Playground(size_t width, size_t height)
-    : m_width(width)
-    , m_height(height)
+Playground::Playground(int width, int height)
+    : m_width(static_cast<size_t>(width))
+    , m_height(static_cast<size_t>(height))
 {
     reset();
 }
