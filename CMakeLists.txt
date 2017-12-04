@@ -35,3 +35,7 @@ target_include_directories(snake SYSTEM PRIVATE ${CURSES_INCLUDE_DIRS} ${SFML_IN
 
 target_link_libraries(snake ${CURSES_LIBRARIES} ${SFML_LIBRARIES})
 
+add_custom_command(TARGET snake POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_CURRENT_SOURCE_DIR}/data ${CMAKE_CURRENT_BINARY_DIR}/data
+)
+
