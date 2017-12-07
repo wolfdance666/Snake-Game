@@ -135,7 +135,8 @@ void graphicMode()
     {
         // Process events
         sf::Event event;
-        while (window.pollEvent(event))
+        bool handleEvents = true;
+        while (handleEvents && window.pollEvent(event))
         {
             // Close window: exit
             switch (event.type)
@@ -168,6 +169,7 @@ void graphicMode()
                 default:
                     break;
                 }
+                handleEvents = false;
                 break;
             case sf::Event::Closed:
                 window.close();

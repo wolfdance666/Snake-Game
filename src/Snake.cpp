@@ -6,6 +6,7 @@ using namespace std;
 Snake::Snake(Playground& pg, Point const& head)
     : m_pg(pg)
     , m_direction(NONE)
+    , m_lastDirection(NONE)
     , m_isDead(false)
 {
     m_body.push_front(head);
@@ -48,6 +49,7 @@ void Snake::move()
         m_body.pop_back();
         m_body.push_front(newPos);
         m_pg.setPointType(head(), Playground::Snake);
+        m_lastDirection = m_direction;
     }
     else
     {
@@ -66,7 +68,7 @@ void Snake::setDirection(Direction d)
     if (m_isDead)
         return;
 
-    if (d != opposite(m_direction))
+    if (d != opposite(m_lastDirection))
     {
         m_direction = d;
     }

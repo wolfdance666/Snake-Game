@@ -35,6 +35,7 @@ private:
     Playground& m_pg;
     std::deque<Point> m_body;
     Direction m_direction;
+    Direction m_lastDirection;
     bool m_isDead;
 
     Point positionDelta() const;
